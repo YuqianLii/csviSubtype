@@ -1,0 +1,10 @@
+groupAB	sender	receiver	n_interactions	sum_weight	mean_weight
+A1	immune	vascular	0	0	0
+A1	glia	vascular	4	0.000766587120823621	0.000191646780205905
+A1	neuron	vascular	0	0	0
+B1	immune	vascular	1	6.68461169803654e-06	6.68461169803654e-06
+B1	glia	vascular	9	0.000236608026670227	2.62897807411363e-05
+B1	neuron	vascular	0	0	0
+B1_minus_A1	glia	vascular	5	-0.000529979094153395	-0.000165356999464769
+B1_minus_A1	immune	vascular	1	6.68461169803654e-06	6.68461169803654e-06
+B1_minus_A1	neuron	vascular	0	0	0

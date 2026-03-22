@@ -1,0 +1,143 @@
+---
+title: "csviSubtype"
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# csviSubtype
+
+`csviSubtype` implements a GWAS-anchored and vascular-centered framework for molecular subtype barcode discovery.
+
+The current v0.1 package focuses on three core tasks:
+
+1. building scRNA-derived subtype gene features from CSS, CIS, LRS, and DEG inputs,
+2. fusing scRNA and GWAS gene-level evidence into subtype barcodes,
+3. summarizing robustness under ablation settings.
+
+## Installation
+Install from GitHub:
+```{r eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("YuqianLii/csviSubtype")
+```
+
+For local development:
+```{r eval=FALSE}
+# install.packages(c("devtools", "data.table"))
+devtools::load_all()
+```
+
+## Main functions
+
+- `csvi_build_scrna_features()`
+- `csvi_fuse_barcode()`
+- `csvi_summarize_ablation()`
+
+## Included example data
+
+The package includes example input files under `extdata/`:
+
+- `css_example.tsv`
+- `cis_example.tsv`
+- `lrs_example.tsv`
+- `deg_example.tsv`
+- `gwas_feature_example.tsv`
+
+These files are intended to demonstrate the package workflow and output structure.
+
+## Minimal example
+```{r minimal-example, message=FALSE, warning=FALSE}
+library(data.table)
+library(csviSubtype)
+
+css <- fread(system.file("extdata", "css_example.tsv", package = "csviSubtype"))
+cis <- fread(system.file("extdata", "cis_example.tsv", package = "csviSubtype"))
+lrs <- fread(system.file("extdata", "lrs_example.tsv", package = "csviSubtype"))
+deg <- fread(system.file("extdata", "deg_example.tsv", package = "csviSubtype"))
+gwas <- fread(system.file("extdata", "gwas_feature_example.tsv", package = "csviSubtype"))
+
+scrna_res <- csvi_build_scrna_features(
+  css = css,
+  cis = cis,
+  lrs = lrs,
+  deg = deg,
+  mode = "receptor"
+)
+
+fusion_res <- csvi_fuse_barcode(
+  gwas = gwas,
+  scrna_a1 = scrna_res$features_by_group$A1,
+  scrna_b1 = scrna_res$features_by_group$B1
+)
+
+names(scrna_res)
+names(fusion_res)
+```
+
+## Inspect scRNA feature results
+```{r inspect-scrna}
+head(scrna_res$features)
+table(scrna_res$features$scrna_tier)
+```
+
+## Inspect fused subtype ledgers
+```{r inspect-fusion}
+nrow(fusion_res$A1$full)
+nrow(fusion_res$A1$binary)
+nrow(fusion_res$A1$strict)
+
+nrow(fusion_res$B1$full)
+nrow(fusion_res$B1$binary)
+nrow(fusion_res$B1$strict)
+```
+
+## View top binary entries
+```{r top-binary}
+head(fusion_res$A1$binary[, .(
+  gene_key, gwas_pp4_max, gwas_tier, q_sc, scrna_tier, zone_binary
+)])
+
+head(fusion_res$B1$binary[, .(
+  gene_key, gwas_pp4_max, gwas_tier, q_sc, scrna_tier, zone_binary
+)])
+```
+## Output structure
+
+`csvi_build_scrna_features()` returns a list with:
+
+- `css_group`
+- `cis_all`
+- `cis_top`
+- `lrs_use`
+- `features`
+- `features_by_group`
+
+`csvi_fuse_barcode()` returns a list with:
+
+- `gwas_gene_summary`
+- `A1`
+- `B1`
+
+Each subtype entry contains:
+
+- `full`
+- `binary`
+- `strict`
+
+## Notes
+- `mode = "receptor"` is currently implemented in `v0.1`.
+- `mode = "pathway"` is reserved for future expansion.
+- Example files are provided for workflow demonstration and package testing.
+
+## Citation
+If you use `csviSubtype`, please cite the associated preprint/manuscript when available.

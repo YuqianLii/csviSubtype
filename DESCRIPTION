@@ -1,0 +1,31 @@
+Package: csviSubtype
+Title: GWAS-Anchored Vascular-Centered Molecular Subtype Barcode Discovery
+Version: 0.1.0
+Authors@R: 
+    person(given = "Yuqian",
+           family = "Li",
+           role = c("aut", "cre"),
+           email = "yuqian-li@hotmail.com")
+Description: 
+    csviSubtype implements a GWAS-anchored and vascular-centered framework
+    for molecular subtype barcode discovery. The package provides functions
+    for building scRNA-derived feature scores, ranking subtype-relevant genes,
+    fusing human genetic and single-cell evidence, and summarizing robustness
+    under ablation settings.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 4.2.0)
+Imports:
+    data.table
+VignetteBuilder: knitr
+Suggests:
+    ggplot2,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+LazyData: true
+
